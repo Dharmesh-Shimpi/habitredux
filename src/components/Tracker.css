@@ -1,0 +1,68 @@
+.body {
+    height: 90vh;
+    width: 100vw;
+    background-color: rgb(209, 182, 132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    height: 50vh;
+    width: 40vw;
+    background-color: rgb(40, 40, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 1rem;
+    color: bisque;
+}
+
+.calendar {
+
+    height: 20vh;
+    width: 40vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: rgb(238, 238, 238);
+}
+
+
+.tracker-item button {
+  margin: 0 10px;
+}
+
+.button {
+	display: none;
+}
+
+.dates-div:hover .button {
+	display: block;
+}
+
+.month-year {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+
+.value {
+    border: 1px wheat solid;
+    height: 2rem;
+    width: 3rem;
+}
+
+.dates-div {
+    margin: .5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+i {
+    padding: .5rem;
+}
