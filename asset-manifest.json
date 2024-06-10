@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/%3CRepository-name%3E/static/css/main.a18b2445.css",
-    "main.js": "/%3CRepository-name%3E/static/js/main.98bba6a4.js",
-    "index.html": "/%3CRepository-name%3E/index.html",
-    "main.a18b2445.css.map": "/%3CRepository-name%3E/static/css/main.a18b2445.css.map",
-    "main.98bba6a4.js.map": "/%3CRepository-name%3E/static/js/main.98bba6a4.js.map"
+    "main.css": "/habitredux/static/css/main.a18b2445.css",
+    "main.js": "/habitredux/static/js/main.89dbdeba.js",
+    "index.html": "/habitredux/index.html",
+    "main.a18b2445.css.map": "/habitredux/static/css/main.a18b2445.css.map",
+    "main.89dbdeba.js.map": "/habitredux/static/js/main.89dbdeba.js.map"
   },
   "entrypoints": [
     "static/css/main.a18b2445.css",
-    "static/js/main.98bba6a4.js"
+    "static/js/main.89dbdeba.js"
   ]
 }
