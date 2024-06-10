@@ -53,6 +53,9 @@
     border: 1px wheat solid;
     height: 2rem;
     width: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .dates-div {

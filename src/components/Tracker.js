@@ -1,10 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectHabitById } from '../data/fetchReducer';
+import {
+	fetchTrackerByIdThunk,
+	selectHabitById,
+	fetchSelector,
+} from '../data/fetchReducer';
 import { updateHabitThunk } from '../data/updateReducer';
 import { Nav } from './Nav';
+import { useEffect, useState } from 'react';
 import './Tracker.css';
-import { useState } from 'react';
 
 export function Tracker() {
 	const { id } = useParams();
@@ -12,30 +16,37 @@ export function Tracker() {
 	const habit = useSelector((state) => selectHabitById(state, id));
 	const [visibleButtonIndex, setVisibleButtonIndex] = useState(null);
 
+	useEffect(() => {
+		if (habit && habit.tracker) {
+			dispatch(fetchTrackerByIdThunk(habit.tracker));
+		}
+	}, [dispatch, habit]);
+
+	const tracker = useSelector((state) => fetchSelector(state));
+
 	if (!habit) {
 		return <div>Habit not found</div>;
 	}
 
-	function handleUpdate(date, value) {
-		dispatch(updateHabitThunk({ habitId: id, date, value })).then(() => {
-			// Update the local state to reflect the changes
-			const updatedTracker = habit.tracker.map((entry) =>
-				entry.date.toDate().getTime() === date.getTime()
-					? { ...entry, value }
-					: entry,
-			);
-			const updatedHabit = { ...habit, tracker: updatedTracker };
-			setVisibleButtonIndex(null);
-		});
+	if (tracker.length === 0) {
+		return <div>Loading...</div>;
 	}
 
-	// Extract month and year from the first tracker's date
-	const monthYear =
-		habit.tracker.length > 0
-			? habit.tracker[0].date
-					.toDate()
-					.toLocaleString('default', { month: 'long', year: 'numeric' })
-			: '';
+	const monthYear = tracker[0].date.split(' ');
+	const month = monthYear[1];
+	const year = monthYear[3];
+
+	function handleUpdate(date, value) {
+		dispatch(updateHabitThunk({ habitId: id, date, value }))
+			.then(() => {
+				setVisibleButtonIndex(null);
+			})
+			.then(() => {
+				if (habit && habit.tracker) {
+					dispatch(fetchTrackerByIdThunk(habit.tracker));
+				}
+			});
+	}
 
 	function handleDiv(index) {
 		setVisibleButtonIndex(visibleButtonIndex === index ? null : index);
@@ -47,10 +58,15 @@ export function Tracker() {
 			<div className='body'>
 				<div className='main'>
 					<h3>{habit.habit}</h3>
-					{monthYear && <div className='month-year'>{monthYear}</div>}
+					{monthYear && (
+						<div className='month-year'>
+							{month} {year}
+						</div>
+					)}
 					<div className='calendar'>
-						{habit.tracker.map((entry, i) => {
-							const [day, , date] = entry.date.toDate().toDateString().split(' ');
+						{tracker.map((entry, i) => {
+							const [day, , date] = entry.date.split(' ');
+
 							return (
 								<div
 									className='dates-div'
@@ -69,13 +85,13 @@ export function Tracker() {
 												className='fa-solid fa-check'
 												onClick={(e) => {
 													e.stopPropagation();
-													handleUpdate(entry.date.toDate(), 1);
+													handleUpdate(entry.date, 1);
 												}}></i>
 											<i
 												className='fa-solid fa-xmark'
 												onClick={(e) => {
 													e.stopPropagation();
-													handleUpdate(entry.date.toDate(), -1);
+													handleUpdate(entry.date, -1);
 												}}></i>
 										</div>
 									)}

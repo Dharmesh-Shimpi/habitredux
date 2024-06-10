@@ -1,7 +1,7 @@
 // addReducer.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from './firebaseConfig';
-import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 const initialState = {
 	habits: [],
@@ -13,26 +13,33 @@ export const addHabitsThunk = createAsyncThunk(
 	'habits/addHabit',
 	async (habitData) => {
 		try {
-			const tracker = [];
+			const trackerDates = [];
 			const today = new Date();
 			for (let i = 0; i < 7; i++) {
 				const days = new Date(today);
 				days.setDate(today.getDate() + i);
-				tracker.push({ date: Timestamp.fromDate(days), value: 0 });
+				const dateString = days.toDateString();
+				trackerDates.push({ date: dateString, value: 0 });
 			}
+
+			const trackerRef = await addDoc(collection(db, 'TrackerDates'), {
+				tracker: trackerDates,
+			});
 
 			const habitRef = await addDoc(collection(db, 'Habits'), {
 				habit: habitData.habit,
-				tracker: tracker,
+				tracker: trackerRef.id,
 			});
 
-			return { id: habitRef.id, habit: habitData.habit, tracker: tracker };
+			return { id: habitRef.id, habit: habitData.habit, tracker: trackerRef.id };
 		} catch (error) {
 			console.error('Error adding habit: ', error);
 			throw error;
 		}
 	},
 );
+
+
 
 const habitsSlice = createSlice({
 	name: 'habits',

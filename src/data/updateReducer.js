@@ -1,20 +1,31 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from './firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const initialState = {
 	status: 'idle',
 	error: null,
 };
 
-
 export const updateHabitThunk = createAsyncThunk(
 	'habits/updateHabit',
-	async ({ habitId, tracker }) => {
+	async ({ habitId, date, value }) => {
 		try {
 			const habitDocRef = doc(db, 'Habits', habitId);
-			await setDoc(habitDocRef, { tracker }, { merge: true });
-			return { habitId, tracker };
+			const habitDoc = await getDoc(habitDocRef);
+			const habitData = habitDoc.data();
+
+			const trackerId = habitData.tracker;
+			const trackerDocRef = doc(db, 'TrackerDates', trackerId);
+			const trackerDoc = await getDoc(trackerDocRef);
+			const trackerData = trackerDoc.data().tracker;
+
+			const updatedTracker = trackerData.map((t) =>
+				t.date === date ? { ...t, value } : t,
+			);
+
+			await setDoc(trackerDocRef, { tracker: updatedTracker }, { merge: true });
+			return { habitId, tracker: updatedTracker };
 		} catch (error) {
 			console.error('Error updating habit: ', error);
 			throw error;
