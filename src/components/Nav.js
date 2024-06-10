@@ -13,7 +13,7 @@ export function Nav() {
 				backgroundColor: 'GrayText',
 			}}>
 			<Link
-				to={'/'}
+				to={'/habitredux'}
 				style={{
 					cursor: 'pointer',
 					color: 'bisque',

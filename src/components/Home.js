@@ -56,7 +56,7 @@ export function Home() {
 					{addStatus === 'failed' && <p>Error: {addError}</p>}
 					{habits.map((data) => (
 						<Link
-							to={`/${data.id}`}
+							to={`/habitredux/${data.id}`}
 							key={data.id}>
 							<div className='habits'>{data.habit}</div>
 						</Link>
